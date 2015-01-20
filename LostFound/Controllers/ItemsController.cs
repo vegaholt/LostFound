@@ -48,7 +48,6 @@ namespace LostFound.Controllers
                 IsLost = lost,
                 SearchString = "",
                 FromDate = "",
-                ToDate = "",
                 SelectedCategories = new List<string>(),
                 SelectedCounties = new List<string>()
             };
@@ -57,25 +56,38 @@ namespace LostFound.Controllers
         }
 
         [HttpPost]
-        public ActionResult GetItems(IndexItemViewModel model)
+        public ActionResult GetItems(IndexItemViewModel model) 
         {
-            var list = new List<Item>();
-            var items = new List<Item>();
-            
-            if (model.IsLost)
-            {
-                items = db.Items.Where(x => x.Lost == false).ToList();
-                model.IsLost = false;
-            }
-            else
-            {
-                items = db.Items.Where(x => x.Lost == true).ToList();
-                model.IsLost = true;
-            }
-            list.AddRange(items);
-            model.Items = list;
+            //Start query
+            var Items = from item in db.Items
+                        select item;
 
-            //Run query
+            //Lost or found
+            Items = Items.Where(p => p.Lost == model.IsLost);
+
+            //From date on found item
+            DateTime fromDate;
+            if(!model.IsLost && DateTime.TryParse(model.FromDate, out fromDate))
+                Items = Items.Where(p => DateTime.Compare(fromDate, p.FoundDate) <= 0);
+
+            //Search string
+            if (!string.IsNullOrEmpty(model.SearchString))
+                Items = Items.Where(p => p.Name.Contains(model.SearchString) || p.Description.Contains(model.SearchString));
+
+            //Categories
+            if (model.SelectedCategories.Any())
+                Items = Items.Where(p => model.SelectedCategories.Contains(p.Category.Name));
+
+            //Counties
+            if (model.SelectedCounties.Any())
+                Items = Items.Where(p => model.SelectedCounties.Contains(p.County.Name));
+
+            var test = 0;
+
+            //Add items to model
+            model.Items = Items.ToList();
+            
+            //Return model
             return Json(model);
         }
 

@@ -46,8 +46,6 @@ namespace LostFound.Models
 
         public string FromDate { get; set; }
 
-        public string ToDate { get; set; }
-
         public List<string> SelectedCategories { get; set; }
 
         public List<string> SelectedCounties { get; set; }

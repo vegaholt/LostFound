@@ -8,8 +8,7 @@
     <select id="category-view" multiple="multiple"></select>
     <!--Counties-->
     <select id="county-view" multiple="multiple"></select>
-    <input type="text" class="form-control short-input datepicker" id="dateFromInput" placeholder="Dato fra">
-    <input type="text" class="form-control short-input datepicker" id="dateToInput" placeholder="Dato til">
+    <input type="text" class="form-control short-input datepicker hidden" id="dateFromInput" placeholder="Dato fra">
     <input type="text" class="form-control" id="searchInput" placeholder="Fritekst">
 </form>
 
@@ -52,12 +51,6 @@
             onDateFromChanged();
         });
 
-        $("#dateToInput").datepicker({
-            format: 'dd.mm.yyyy'
-        }).on('changeDate', function (e) {
-            onDateToChanged();
-        });
-
         $("#searchInput").keypress(function (event) {
             if (event.keyCode == 13) {
                 $(this).blur();
@@ -90,11 +83,6 @@
 
         function onDateFromChanged() {
             model.FromDate = $("#dateFromInput").val();
-            getItems();
-        }
-
-        function onDateToChanged() {
-            model.ToDate = $("#dateToInput").val();
             getItems();
         }
 
@@ -249,6 +237,11 @@
             var isLost = @(ViewBag.IsLost);
             var islostbool = Boolean(isLost);
 
+            //Display from date if item is found
+            if(!islostbool){
+                $("#dateFromInput").removeClass("hidden");
+            }
+
             // AJAX
             $.ajax({
                 url: '@Url.Action("GetIInitialtems", "Items")',
@@ -258,11 +251,11 @@
                     lost: islostbool
                 },
                 success: function (result) {
+                    console.log(result);
                     model = result;
                     model.IsLost = islostbool;
                     buildFilterView();
                     buildView();
-                    console.log(result.IsLost);
                 },
                 error: function (result) {
                 }
@@ -284,7 +277,7 @@
                 contentType: "application/json; charset=utf-8",
                 data: JSON.stringify(model),
                 success: function (result) {
-                    console.log(result.IsLost);
+                    console.log(result);
                     model = result;
                     buildView();
                 },
