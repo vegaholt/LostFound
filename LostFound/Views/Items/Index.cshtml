@@ -1,0 +1,297 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+
+<!--Search fields-->
+<form id="filter-group" class="form-inline searchForm invisible">
+    <!--Categories-->
+    <select id="category-view" multiple="multiple"></select>
+    <!--Counties-->
+    <select id="county-view" multiple="multiple"></select>
+    <input type="text" class="form-control short-input datepicker" id="dateFromInput" placeholder="Dato fra">
+    <input type="text" class="form-control short-input datepicker" id="dateToInput" placeholder="Dato til">
+    <input type="text" class="form-control" id="searchInput" placeholder="Fritekst">
+</form>
+
+<div role="tabpanel">
+
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs" role="tablist">
+        <li role="presentation" class="active"><a href="#map-tab" aria-controls="map-tab" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> Kart</a></li>
+        <li role="presentation"><a href="#grid-tab" aria-controls="grid-tab" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-th" aria-hidden="true"></span> Galleri</a></li>
+        <li role="presentation"><a href="#list-tab" aria-controls="list-tab" role="tab" data-toggle="tab"><span class="glyphicon glyphicon-align-justify" aria-hidden="true"></span> Liste</a></li>
+    </ul>
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+        <!--Map tab content-->
+        <div role="tabpanel" class="tab-pane fade in active" id="map-tab">
+            <!--Map-->
+            <div id="map" class="map-view"></div>
+        </div>
+
+        <!--Grid tab content-->
+        <div role="tabpanel" class="tab-pane fade" id="grid-tab">
+            <div id="grid-view" class="row item-grid"></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        var model;
+
+        $(document).ready(function () {
+            getInitialItems();
+        });
+
+        //EVENTS
+        $("#dateFromInput").datepicker({
+        format: 'dd.mm.yyyy'
+        }).on('changeDate', function (e) {
+            onDateFromChanged();
+        });
+
+        $("#dateToInput").datepicker({
+            format: 'dd.mm.yyyy'
+        }).on('changeDate', function (e) {
+            onDateToChanged();
+        });
+
+        $("#searchInput").keypress(function (event) {
+            if (event.keyCode == 13) {
+                $(this).blur();
+                onSearchChanged();
+            }
+        });
+
+        //EVENT HANDLERS
+        function onCategoryChange() {
+            model.SelectedCategories = [];
+            $.each($("#dropdown-category .multiselect-container li"), function () {
+                if ($(this).hasClass('active')) {
+                    var category = $(this).find("input").val();
+                    model.SelectedCategories.push(category);
+                }
+            });
+            getItems();
+        }
+
+        function onCountyChange() {
+            model.SelectedCounties = [];
+            $.each($("#dropdown-county .multiselect-container li"), function () {
+                if ($(this).hasClass('active')) {
+                    var county = $(this).find("input").val();
+                    model.SelectedCounties.push(county);
+                }
+            });
+            getItems();
+        }
+
+        function onDateFromChanged() {
+            model.FromDate = $("#dateFromInput").val();
+            getItems();
+        }
+
+        function onDateToChanged() {
+            model.ToDate = $("#dateToInput").val();
+            getItems();
+        }
+
+        function onSearchChanged() {
+            model.SearchString = $("#searchInput").val();
+            getItems();
+        }
+
+        //BUILD VIEWS
+        function buildView() {
+            buildGridView();
+            buildMapView();
+        }
+
+        //Filter
+        function buildFilterView() {
+            //Category
+            $.each(model.Categories, function () {
+                $("#category-view").append('<option value="' + this.Name + '">' + this.Name + '</option>');
+            });
+            $("#category-view").multiselect({
+                buttonContainer: '<div class="btn-group" id="dropdown-category"></div>',
+                nonSelectedText: 'Velg kategori',
+                onDropdownHidden: function (event) {
+                    onCategoryChange();
+                }
+            });
+
+            //County
+            $.each(model.Counties, function () {
+                $("#county-view").append('<option value="' + this.Name + '">' + this.Name + '</option>');
+            });
+            $("#county-view").multiselect({
+                buttonContainer: '<div class="btn-group" id="dropdown-county"></div>',
+                nonSelectedText: 'Velg fylke',
+                onDropdownHidden: function (event) {
+                    onCountyChange();
+                }
+            });
+
+            $("#filter-group").removeClass("invisible");
+        }
+
+        //Grid
+        function buildGridView() {
+            $("#grid-view").empty();
+
+            $.each(model.Items, function () {
+
+                var dateString = "";
+                if (this.Lost) {
+                    var fromDate = new Date(parseInt(this.LostDateFrom.substr(6)));
+                    var toDate = new Date(parseInt(this.LostDateTo.substr(6)));
+                    dateString = fromDate.getDate() + "." + fromDate.getMonth() + 1 + "." + fromDate.getFullYear() + " - " + toDate.getDate() + "." + toDate.getMonth() + 1 + "." + toDate.getFullYear();
+                }
+                else {
+                    var date = new Date(parseInt(this.FoundDate.substr(6)));
+                    dateString = date.getDate() + "." + date.getMonth() + 1 + "." + date.getFullYear();
+                }
+
+                $("#grid-view").append(
+                    '<div class="col-lg-3 col-md-4 col-sm-6">' +
+                        '<a href="Items/Details/' + this.Id + '">' +
+                            '<div class="item-wrapper">' +
+                                '<img src="' + this.Category.ImageUrl + '" alt="Alternate Text" />' +
+                                '<p class="text-large dark-gray">' + this.Name + '</p>' +
+                                '<p class="text-small light-gray">' + dateString + '</p>' +
+                                '<p class="text-small medium-gray item-description">' + this.Description + '</p>' +
+                            '</div>' +
+                        '</a>' +
+                    '</div>');
+            });
+        }
+
+        //Map
+        var marker;
+        var markers = [];
+        var openInfoWindows = [];
+        var map;
+
+        function buildMapView() {
+            var position = new google.maps.LatLng(0, 0);
+            var mapOptions = {
+                zoom: 15,
+                center: position
+            }
+
+            var bounds = new google.maps.LatLngBounds();
+            map = new google.maps.Map(document.getElementById('map'), mapOptions);
+
+            model.Items.forEach(function (entry) {
+                var title = entry.Name;
+                var description = entry.Description;
+                var id = entry.Id;
+
+                var ellipsisLength = 50
+                if (description.length > ellipsisLength) {
+                    description = description.substring(0, ellipsisLength) + "...";
+                }
+
+                var position = new google.maps.LatLng(entry.Lat, entry.Lon);
+
+                var infoWindowContent =
+                    '<div id="content">' +
+                        '<div id="siteNotice">' +
+                        '</div>' +
+                        '<h4 id="firstHeading" class="firstHeading">' + title + '</h4>' +
+                        '<div id="bodyContent">' +
+                            '<p>' + description + '</p>' +
+                            '<br><a href = "Items/Details/' + id + '">Les mer..</a>' +
+                        '</div>' +
+                    '</div>'
+
+                var infoWindow = new google.maps.InfoWindow({
+                    content: infoWindowContent,
+                    maxWidth: 200
+                });
+
+                var markerWidth = 366;
+                var markerHeight = 592;
+
+                marker = new google.maps.Marker({
+                    position: position,
+                    map: map,
+                    draggable: false,
+                    title: title,
+                });
+
+                google.maps.event.addListener(marker, 'click', function () {
+                    for (i = 0; i < openInfoWindows.length; i++) {
+                        openInfoWindows[i].close();
+                    }
+                    openInfoWindows.push(infoWindow);
+                    infoWindow.open(map, this);
+                });
+
+                google.maps.event.addListener(map, "click", function (event) {
+                    for (i = 0; i < openInfoWindows.length; i++) {
+                        openInfoWindows[i].close();
+                    }
+                })
+
+                markers.push(marker);
+                bounds.extend(marker.position);
+            });
+
+            map.fitBounds(bounds);
+        }
+
+        //GET DATA
+        function getInitialItems() {
+            var isLost = @(ViewBag.IsLost);
+            var islostbool = Boolean(isLost);
+
+            // AJAX
+            $.ajax({
+                url: '@Url.Action("GetIInitialtems", "Items")',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    lost: islostbool
+                },
+                success: function (result) {
+                    model = result;
+                    model.IsLost = islostbool;
+                    buildFilterView();
+                    buildView();
+                    console.log(result.IsLost);
+                },
+                error: function (result) {
+                }
+            });
+        }
+
+        function getItems() {
+
+            //Clean up object
+            model.Items = [];
+            model.Categories = [];
+            model.Counties = [];
+
+            // AJAX
+            $.ajax({
+                url: '@Url.Action("GetItems", "Items")',
+                type: 'POST',
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(model),
+                success: function (result) {
+                    console.log(result.IsLost);
+                    model = result;
+                    buildView();
+                },
+                error: function (result) {
+                    console.log(result);
+                }
+            });
+        }
+    </script>
+}

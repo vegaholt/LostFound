@@ -1,0 +1,114 @@
+﻿body {
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+    resize: none;
+}
+
+.hidden {
+    display: none;
+}
+
+#pac-input {
+    margin-bottom: 15px;
+    width: 900px;
+    max-width: 100%;
+}
+
+#map{
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.item-grid{
+    padding-top: 25px;
+}
+
+.item-grid a{
+    text-decoration: none !important;
+}
+
+.item-wrapper{
+    border: 1px solid #ccc;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    padding: 25px 15px 20px;
+    width: 100%;
+    height: 300px;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.item-wrapper:hover{
+    border: 1px solid #999;
+}
+
+.item-wrapper img{
+    width: 100px;
+    max-width: 100%;
+    padding-bottom: 15px;
+    display: inline-block;
+}
+
+.text-large{
+    font-size: 18px;
+    margin-bottom: 0;
+}
+
+.text-medium{
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.dark-gray{
+    color: #444;
+}
+
+.medium-gray{
+    color: #666;
+}
+
+.light-gray{
+    color: #888;
+}
+
+.toggleBtn{
+    margin-bottom: 14px;
+}
+
+.toggleBtn .btn{
+    margin: 1px;
+}
+
+.searchForm{
+    margin-bottom: 20px;
+}
+
+.short-input{
+    width: 100px;
+}
+
+.datepicker{
+    margin-top: 0;
+}
+
+.map-view{
+    width: 100%;
+    height: 500px;
+    margin-top: 25px;
+}
+
+.form-dropdown{
+    display: inline-block;
+}
