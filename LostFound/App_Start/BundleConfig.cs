@@ -24,6 +24,7 @@ namespace LostFound
                       "~/Scripts/respond.js",
                       "~/Scripts/bootstrap-datepicker.js",
                       "~/Scripts/bootstrap-multiselect.js",
+                      "~/Scripts/tooltip.js",
                       "~/Scripts/trunk8.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(

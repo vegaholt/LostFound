@@ -1,0 +1,349 @@
+﻿@model LostFound.Models.NewItemViewModel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<div class="row">
+
+    <!--Form-->
+    <div class="col-md-6">
+
+        @using (Html.BeginForm("Create", "Items", FormMethod.Post, new { @class = "form-horizontal", role = "form", enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <!--Lost/Found Switch-->
+            <div class="row form-group">
+                <div class="col-md-8 col-md-offset-4">
+                    <div class="btn-group" role="group">
+                        <button id="found-btn" type="button" class="btn btn-success">Funnet</button>
+                        <button id="lost-btn" type="button" class="btn btn-default">Tapt</button>
+                    </div>
+                </div>
+            </div>
+
+            <!--Name-->
+            <div class="form-group">
+                @Html.LabelFor(model => model.Item.Name, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.Item.Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Item.Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <!--Description-->
+            <div class="form-group">
+                @Html.LabelFor(model => model.Item.Description, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.TextAreaFor(model => model.Item.Description, new { @class = "form-control", style = "min-height: 150px;" })
+                    @Html.ValidationMessageFor(model => model.Item.Description, "", new { @class = "text-danger" })
+                </div>
+            </div>
+                
+            <!--Category-->
+            <div class="form-group">
+                @Html.LabelFor(model => model.Item.Category, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.DropDownListFor(model => model.Item.Category.ID, new SelectList(Model.Categories, "ID", "Name"), "-- Velg kategori --", new { @class = "selectpicker form-control" })
+                    @Html.ValidationMessageFor(model => model.Item.Category, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <!--Image upload-->
+            <div class="form-group" id="create-image">
+                @Html.LabelFor(model => model.Image, new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.Image, new { @class = "form-control", type = "file" })
+                </div>
+            </div>
+
+            <!-- Reward - Lost -->
+            <div class="form-group" id="create-reward">
+                @Html.LabelFor(model => model.Item.Reward, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.Item.Reward, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Item.Reward, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <!-- Claim - Found -->
+            <div class="form-group" id="create-claim">
+                @Html.LabelFor(model => model.Item.Claim, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.Item.Claim, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Item.Claim, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <!-- Latitude -->
+            <div class="form-group hidden">
+                @Html.LabelFor(model => model.Item.Lat, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.Item.Lat, new { htmlAttributes = new { @class = "form-control", @id = "create-lat" } })
+                    @Html.ValidationMessageFor(model => model.Item.Lat, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <!-- Longitude -->
+            <div class="form-group hidden">
+                @Html.LabelFor(model => model.Item.Lon, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.Item.Lon, new { htmlAttributes = new { @class = "form-control", @id = "create-lon" } })
+                    @Html.ValidationMessageFor(model => model.Item.Lon, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <!-- County -->
+            <div class="form-group hidden">
+                @Html.LabelFor(model => model.Item.County, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.Item.County.Name, new { htmlAttributes = new { @class = "form-control", @id = "create-county" } })
+                    @Html.ValidationMessageFor(model => model.Item.County.Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <!-- Adress -->
+            <div class="form-group hidden">
+                @Html.LabelFor(model => model.Item.Adress, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.Item.Adress, new { htmlAttributes = new { @class = "form-control", @id = "create-adress" } })
+                    @Html.ValidationMessageFor(model => model.Item.Adress, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <!-- Found date - Found -->
+            <div class="form-group" id="create-foundDate">
+                @Html.LabelFor(model => model.DateFound, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.DateFound, new { htmlAttributes = new { @class = "form-control datepicker" } })
+                    @Html.ValidationMessageFor(model => model.DateFound, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <!-- Lost date from - Lost -->
+            <div class="form-group" id="create-lostDateFrom">
+                @Html.LabelFor(model => model.DateLostFrom, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.DateLostFrom, new { htmlAttributes = new { @class = "form-control datepicker" } })
+                    @Html.ValidationMessageFor(model => model.DateLostFrom, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <!-- Lost date to - Lost -->
+            <div class="form-group" id="create-lostDateTo">
+                @Html.LabelFor(model => model.DateLostTo, htmlAttributes: new { @class = "control-label col-md-4" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.DateLostTo, new { htmlAttributes = new { @class = "form-control datepicker" } })
+                    @Html.ValidationMessageFor(model => model.DateLostTo, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <!-- Input type lost/found -->
+            @Html.CheckBoxFor(model => model.Item.Lost, new { @id = "create-lost", @class = "hidden" } )
+
+            <div class="form-group">
+                <div class="col-md-offset-4 col-md-8">
+                    <input type="submit" value="Opprett" class="btn btn-primary" />
+                </div>
+            </div>
+        }
+    </div>
+
+    <!--Google map-->
+    <div class="col-md-6">
+        <input id="pac-input" type="text" class="form-control" placeholder="Adresse">
+        <div id="map" style="height: 500px; width: 900px; max-width: 100%;"></div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    
+    <script>
+        $(document).ready(function () {
+
+            getLocation();
+
+            $(".datepicker").datepicker({
+                format: 'dd.mm.yyyy'
+            });
+
+            $("#create-reward").hide();
+            $("#create-claim").show();
+            $("#create-foundDate").show();
+            $("#create-lostDateFrom").hide();
+            $("#create-lostDateTo").hide();
+            $("#create-image").hide();
+
+            $("#lost-btn").click(function () {
+                displayLostView();
+            });
+
+            $("#found-btn").click(function () {
+                displayFoundView();
+            });
+        });
+
+        function displayLostView() {
+            $("#lost-btn").removeClass("btn-default");
+            $("#lost-btn").addClass("btn-danger");
+            $("#found-btn").removeClass("btn-success");
+            $("#found-btn").addClass("btn-default");
+
+            $("#create-lost").prop('checked', true);
+
+            $("#create-reward").show();
+            $("#create-claim").hide();
+            $("#create-foundDate").hide();
+            $("#create-lostDateFrom").show();
+            $("#create-lostDateTo").show();
+            $("#create-image").show();
+        }
+
+        function displayFoundView() {
+            $("#found-btn").removeClass("btn-default");
+            $("#found-btn").addClass("btn-success");
+            $("#lost-btn").removeClass("btn-danger");
+            $("#lost-btn").addClass("btn-default");
+
+            $("#create-lost").prop('checked', false);
+
+            $("#create-reward").hide();
+            $("#create-claim").show();
+            $("#create-foundDate").show();
+            $("#create-lostDateFrom").hide();
+            $("#create-lostDateTo").hide();
+            $("#create-image").hide();
+        }
+
+        //Geo data
+        var marker;
+        var geocoder;
+
+        function getLocation() {
+            if (navigator.geolocation) {
+                var timeoutVal = 10 * 1000 * 1000;
+                navigator.geolocation.getCurrentPosition(
+                    initialize,
+                    errorHandler,
+                    { enableHighAccuracy: true, timeout: timeoutVal, maximumAge: 0 }
+                );
+            }
+        }
+
+        function errorHandler(err) {
+            if (err.code == 1) {
+                alert("Error: Access is denied!");
+            } else if (err.code == 2) {
+                alert("Error: Position is unavailable!");
+            }
+        }
+
+        function initialize(position) {
+            var lat = position.coords.latitude;
+            var lng = position.coords.longitude;
+
+            $("#create-lat").val(lat);
+            $("#create-lon").val(lng);
+
+            var position = new google.maps.LatLng(lat, lng);
+            var mapOptions = {
+                zoom: 15,
+                center: position
+            }
+            var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+            marker = setMarker(position, map);
+
+            //init adress
+            geocodePosition(position);
+
+            // Search field
+            var input = document.getElementById('pac-input');
+            var autocomplete = new google.maps.places.Autocomplete(input);
+            autocomplete.bindTo('bounds', map);
+            var places = new google.maps.places.Autocomplete(input);
+
+            // Search field listener
+            google.maps.event.addListener(places, 'place_changed', function () {
+                var place = places.getPlace();
+                var address = place.formatted_address;
+                var region = place.address_components;
+                var latitude = place.geometry.location.lat();
+                var longitude = place.geometry.location.lng();
+                var msg = "Address: " + address + "\nLatitude: " + latitude + "\nLongitude: " + longitude;
+
+                position = new google.maps.LatLng(latitude, longitude);
+
+                if (place.geometry.viewport) {
+                    map.fitBounds(place.geometry.viewport);
+                } else {
+                    map.setCenter(position);
+                    map.setZoom(12);
+                }
+
+                marker.setMap(null);
+                marker = setMarker(position, map);
+
+                $("#create-lat").val(latitude);
+                $("#create-lon").val(longitude);
+
+                geocodePosition(position);
+            });
+        }
+
+        function setMarker(position, map) {
+
+            var image = {
+                url: "icon.png",
+                size: new google.maps.Size(366, 592),
+                origin: new google.maps.Point(0, -100),
+                anchor: new google.maps.Point(11, 36),
+                scaledSize: new google.maps.Size(22, 36)
+            };
+
+            marker = new google.maps.Marker({
+                position: position,
+                map: map,
+                draggable: true,
+                title: '',
+                // icon: image
+            });
+
+            // Set up marker listeners
+            google.maps.event.addListener(marker, 'dragend', function (evt) {
+                $("#create-lat").val(evt.latLng.lat());
+                $("#create-lon").val(evt.latLng.lng());
+
+                geocodePosition(marker.getPosition());
+            });
+
+            return marker;
+        }
+
+        function geocodePosition(pos) {
+            geocoder = new google.maps.Geocoder();
+            geocoder.geocode({
+                latLng: pos
+            }, function (responses) {
+                if (responses && responses.length > 0) {
+                    var addr = responses[0].address_components;
+                    var county;
+                    for (i = 0; i < addr.length; i++) {
+                        if (addr[i].types[0] == "administrative_area_level_1") {
+                            county = addr[i].short_name;
+                        }
+                    }
+
+                    $("#create-county").val(county);
+                    if (responses && responses.length > 0) {
+                        document.getElementById('pac-input').value = responses[0].formatted_address;
+                        $("#create-adress").val(responses[0].formatted_address);
+                    }
+                }
+            });
+        }
+    </script>
+}

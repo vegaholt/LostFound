@@ -49,5 +49,7 @@ namespace LostFound.Models
         public List<string> SelectedCategories { get; set; }
 
         public List<string> SelectedCounties { get; set; }
+
+        public int Hits { get; set; }
     }
 }

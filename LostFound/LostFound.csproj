@@ -214,6 +214,8 @@
     <Content Include="Scripts\bootstrap-multiselect.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
+    <None Include="Properties\PublishProfiles\findr - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\findr - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.1.js" />
     <Content Include="Scripts\jquery-2.1.1.min.js" />
@@ -231,6 +233,7 @@
     <Content Include="Scripts\perpetuum.knockout.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\tooltip.js" />
     <Content Include="Scripts\trunk8.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Uploads\8396cb09-4124-4c57-812c-31b09ba93609dogulogo.png" />

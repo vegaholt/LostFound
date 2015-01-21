@@ -46,9 +46,9 @@ namespace LostFound
             //   consumerKey: "",
             //   consumerSecret: "");
 
-            //app.UseFacebookAuthentication(
-            //   appId: "",
-            //   appSecret: "");
+            app.UseFacebookAuthentication(
+               appId: "1524198254524434",
+               appSecret: "63f720ab8c43a48cb9fa481a6399a71d");
 
             //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
             //{

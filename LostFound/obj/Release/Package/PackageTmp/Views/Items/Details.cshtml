@@ -1,0 +1,11 @@
+﻿@model LostFound.Models.Item
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<p>
+    @Html.ActionLink("Rediger", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Tilbake til liste", "Index", "Items", new { lost = "Found" }, null) |
+    @Html.ActionLink("Tilbake til liste", "Index", "Items", new { lost = "Lost" }, null)
+</p>

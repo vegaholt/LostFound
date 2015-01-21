@@ -113,8 +113,8 @@ C:\Users\vegaholt\Documents\GitHub\LostFound\LostFound\bin\Microsoft.Owin.Securi
 C:\Users\vegaholt\Documents\GitHub\LostFound\LostFound\bin\Microsoft.Owin.Security.Google.xml
 C:\Users\vegaholt\Documents\GitHub\LostFound\LostFound\bin\Microsoft.Owin.Security.Twitter.xml
 C:\Users\vegaholt\Documents\GitHub\LostFound\LostFound\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
-C:\Users\vegaholt\Documents\GitHub\LostFound\LostFound\obj\Debug\LostFound.csprojResolveAssemblyReference.cache
 C:\Users\vegaholt\Documents\GitHub\LostFound\LostFound\obj\Debug\LostFound.Migrations.initial.resources
 C:\Users\vegaholt\Documents\GitHub\LostFound\LostFound\obj\Debug\LostFound.csproj.GenerateResource.Cache
 C:\Users\vegaholt\Documents\GitHub\LostFound\LostFound\obj\Debug\LostFound.dll
 C:\Users\vegaholt\Documents\GitHub\LostFound\LostFound\obj\Debug\LostFound.pdb
+C:\Users\vegaholt\Documents\GitHub\LostFound\LostFound\obj\Debug\LostFound.csprojResolveAssemblyReference.cache

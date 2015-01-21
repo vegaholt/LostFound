@@ -43,6 +43,7 @@ namespace LostFound.Models
         public string Adress { get; set; }
 
         [Display(Name = "Dato funnet")]
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime FoundDate { get; set; }
 
         [Display(Name = "Dato tapt, fra")]

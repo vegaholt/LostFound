@@ -49,7 +49,8 @@ namespace LostFound.Controllers
                 SearchString = "",
                 FromDate = "",
                 SelectedCategories = new List<string>(),
-                SelectedCounties = new List<string>()
+                SelectedCounties = new List<string>(),
+                Hits = list.Count()
             };
 
             return Json(model);
@@ -72,7 +73,7 @@ namespace LostFound.Controllers
 
             //Search string
             if (!string.IsNullOrEmpty(model.SearchString))
-                Items = Items.Where(p => p.Name.Contains(model.SearchString) || p.Description.Contains(model.SearchString));
+                Items = Items.Where(p => p.Name.Contains(model.SearchString) || p.Description.Contains(model.SearchString) || p.Adress.Contains(model.SearchString));
 
             //Categories
             if (model.SelectedCategories.Any())
@@ -82,10 +83,11 @@ namespace LostFound.Controllers
             if (model.SelectedCounties.Any())
                 Items = Items.Where(p => model.SelectedCounties.Contains(p.County.Name));
 
-            var test = 0;
-
             //Add items to model
             model.Items = Items.ToList();
+
+            //Add hits to model
+            model.Hits = Items.Count();
             
             //Return model
             return Json(model);
