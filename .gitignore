@@ -1,0 +1,6 @@
+#Ignore Azure build csdef & Pubxml files
+ServiceDefinition.build.csdef
+*.azurePubxml
+
+#Ignore WebDeploy publish profile
+*.Publish.xml
