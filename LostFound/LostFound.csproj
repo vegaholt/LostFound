@@ -216,6 +216,8 @@
     <Content Include="Scripts\bootstrap.min.js" />
     <None Include="Properties\PublishProfiles\findr - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\findr - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\findr2 - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\findr2 - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-2.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.1.js" />
     <Content Include="Scripts\jquery-2.1.1.min.js" />
